@@ -1,0 +1,108 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tngd-rag"
+version = "3.0.0"
+description = "Answers Touch 'n Go eWallet questions from the official FAQ accurately and blocks against adversarial prompts."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "purplingC" }]
+requires-python = ">=3.9"
+keywords = ["rag", "retrieval", "llm", "guardrails", "faq", "nlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Nothing required at runtime, so it works on a plain Python install
+dependencies = []
+
+[project.optional-dependencies]
+# Faster vector maths, picked up automatically if present
+fast = ["numpy>=1.21"]
+# The REST API
+api = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+]
+# Neural models, roughly 2.5 GB to download
+ml = [
+    "numpy>=1.21",
+    "sentence-transformers>=2.2",
+    "faiss-cpu>=1.7",
+    "transformers>=4.30",
+    "torch>=2.0",
+]
+# Everything above plus the test and lint tools
+dev = [
+    "numpy>=1.21",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "httpx>=0.27",
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.8",
+]
+
+[project.scripts]
+tngd-rag = "tngd_rag.cli:main"
+tngd-rag-api = "tngd_rag.api.app:run"
+
+[project.urls]
+Homepage = "https://github.com/purplingC/tng-faq-rag-system-1"
+Documentation = "https://github.com/purplingC/tng-faq-rag-system-1/tree/main/docs"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tngd_rag = ["resources/*.json", "web/static/*.html"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: tests that build a full index (deselect with '-m \"not slow\"')",
+    "network: tests that require internet access (deselected by default)",
+]
+filterwarnings = ["error::DeprecationWarning:tngd_rag.*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "C4", "SIM", "RUF"]
+ignore = [
+    "E501",    # line length is handled by the formatter
+    "B008",    # function calls in argument defaults are used deliberately here
+    "SIM105",  # contextlib.suppress is not always clearer than try/except
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+# These two hold smart quotes on purpose, since their job is normalising them
+"src/tngd_rag/text.py" = ["RUF001"]
+"tests/test_text.py" = ["RUF001"]
+
+[tool.mypy]
+# Mypy no longer targets 3.9, so ruff checks the syntax and mypy checks the types
+python_version = "3.10"
+files = ["src/tngd_rag"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
