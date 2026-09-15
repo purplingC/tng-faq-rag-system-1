@@ -1,0 +1,36 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Generated index, rebuilt in seconds with make index
+.tngd_index/
+.tngd_index_eval/
+
+# Generated knowledge base exports, while the seed KB ships as package data under src
+data/
+
+# Local secrets
+.env
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
