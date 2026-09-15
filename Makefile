@@ -44,7 +44,7 @@ install-ml: venv
 run:
 	$(PY) -m tngd_rag
 
-# Answer a scripted set of queries
+# Answer a scripted set of normal, out-of-scope and adversarial queries
 demo:
 	$(PY) -m tngd_rag demo
 
@@ -52,7 +52,7 @@ demo:
 chat:
 	$(PY) -m tngd_rag chat
 
-# Serve the web chat UI on port 8000
+# Serve the web chat UI on http://127.0.0.1:8000
 ui:
 	$(PY) -m tngd_rag ui
 
@@ -121,6 +121,6 @@ clean:
 	rm -rf .tngd_index .tngd_index_eval .pytest_cache .mypy_cache .ruff_cache htmlcov .coverage
 	find . -name '__pycache__' -type d -prune -exec rm -rf {} +
 
-# Also remove the virtualenv and build artefacts
+# Remove the virtualenv, scraped data and build artefacts
 distclean: clean
 	rm -rf $(VENV) build dist src/*.egg-info data/tngd_faq.json data/tngd_faq.csv
