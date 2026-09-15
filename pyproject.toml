@@ -85,7 +85,8 @@ target-version = "py39"
 src = ["src", "tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "B", "UP", "C4", "SIM", "RUF"]
+# Import sorting is off on purpose, imports stay in one compact block
+select = ["E", "F", "W", "B", "UP", "C4", "SIM", "RUF"]
 ignore = [
     "E501",    # line length is handled by the formatter
     "B008",    # function calls in argument defaults are used deliberately here
