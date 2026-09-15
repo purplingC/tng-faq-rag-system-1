@@ -1,4 +1,4 @@
-"""Logging setup. """
+"""Logging setup."""
 
 from __future__ import annotations
 import logging
