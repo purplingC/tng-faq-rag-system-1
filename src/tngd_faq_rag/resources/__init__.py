@@ -16,11 +16,11 @@ SEED_FILENAME = "tngd_faq_seed.json"
 
 def load_seed_records() -> list[dict[str, Any]]:
     """Return the embedded seed FAQ records."""
-    try:  # Python 3.9+
+    try:  
         from importlib.resources import files
 
         raw = (files(__package__) / SEED_FILENAME).read_text(encoding="utf-8")
-    except Exception:  # pragma: no cover - very old interpreters / zipapp quirks
+    except Exception:  
         from pathlib import Path
 
         raw = (Path(__file__).parent / SEED_FILENAME).read_text(encoding="utf-8")
