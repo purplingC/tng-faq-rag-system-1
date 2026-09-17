@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 import sys
 
-LOG = logging.getLogger("tngd_rag")
+LOG = logging.getLogger("tngd_faq_rag")
 
 
 def setup_logging(verbose: bool = False) -> None:

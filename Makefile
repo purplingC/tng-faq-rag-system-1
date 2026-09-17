@@ -42,19 +42,19 @@ install-ml: venv
 
 # Build the index, run the demo, then chat
 run:
-	$(PY) -m tngd_rag
+	$(PY) -m tngd_faq_rag
 
 # Answer a scripted set of normal, out-of-scope and adversarial queries
 demo:
-	$(PY) -m tngd_rag demo
+	$(PY) -m tngd_faq_rag demo
 
 # Interactive prompt
 chat:
-	$(PY) -m tngd_rag chat
+	$(PY) -m tngd_faq_rag chat
 
 # Serve the web chat UI on http://127.0.0.1:8000
 ui:
-	$(PY) -m tngd_rag ui
+	$(PY) -m tngd_faq_rag ui
 
 # Serve the REST API on port 8080, docs at /docs
 api:
@@ -62,35 +62,35 @@ api:
 
 # Build the container image
 docker-build:
-	docker build -t tngd-rag:local .
+	docker build -t tngd-faq-rag:local .
 
 # Run the container on port 8080
 docker-run: docker-build
-	docker run --rm -p 8080:8080 tngd-rag:local
+	docker run --rm -p 8080:8080 tngd-faq-rag:local
 
 # Answer one question, make ask Q="what is SOS Balance?"
 ask:
-	$(PY) -m tngd_rag ask "$(Q)"
+	$(PY) -m tngd_faq_rag ask "$(Q)"
 
 # Evaluate against the frozen seed corpus
 eval:
-	$(PY) -m tngd_rag eval
+	$(PY) -m tngd_faq_rag eval
 
 # Evaluate against the active knowledge base
 eval-live:
-	$(PY) -m tngd_rag eval --live
+	$(PY) -m tngd_faq_rag eval --live
 
 # Fast end-to-end check
 smoke:
-	$(PY) -m tngd_rag smoke
+	$(PY) -m tngd_faq_rag smoke
 
 # Rebuild the index
 index:
-	$(PY) -m tngd_rag index --rebuild
+	$(PY) -m tngd_faq_rag index --rebuild
 
 # Rebuild the knowledge base from the live help centre
 scrape:
-	$(PY) -m tngd_rag scrape
+	$(PY) -m tngd_faq_rag scrape
 
 # Run the tests
 test:
@@ -98,7 +98,7 @@ test:
 
 # Run the tests with coverage
 test-cov:
-	$(VENV)/bin/pytest --cov=tngd_rag --cov-report=term-missing
+	$(VENV)/bin/pytest --cov=tngd_faq_rag --cov-report=term-missing
 
 # Lint
 lint:
