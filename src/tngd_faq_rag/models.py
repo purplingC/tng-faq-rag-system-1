@@ -1,5 +1,4 @@
-"""The file only defines the shapes of data that get passed around the system. 
-    Shared data types, so modules can use them without importing each other."""
+"""This file defines the shapes of data passed around the system."""
 
 from __future__ import annotations
 import dataclasses

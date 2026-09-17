@@ -1,4 +1,4 @@
-"""Logging setup."""
+"""This file sets up logging for the whole package."""
 
 from __future__ import annotations
 import logging

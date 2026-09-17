@@ -1,4 +1,4 @@
-"""Upstream URLs, canned copy and index file names."""
+"""This file contains fixed values: help centre URLs, canned replies and index file names."""
 
 TNGD_FAQ_URL = "https://support.tngdigital.com.my/hc/en-my/categories/360002280493-Frequently-Asked-Questions-FAQ"
 TNGD_HELP_BASE = "https://support.tngdigital.com.my"

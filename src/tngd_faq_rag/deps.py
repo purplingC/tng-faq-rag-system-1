@@ -1,4 +1,4 @@
-"""Checks which optional packages are installed, without importing them."""
+"""This file checks which optional packages are installed, without importing them."""
 
 from __future__ import annotations
 from typing import Any
