@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=77", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -72,9 +72,9 @@ tngd_rag = ["resources/*.json", "web/static/*.html"]
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]
-addopts = "-ra --strict-markers"
+addopts = "-ra --strict-markers -m 'not network'"
 markers = [
-    "slow: tests that build a full index (deselect with '-m \"not slow\"')",
+    "slow: tests that build a full index (deselect with '-m \"not slow and not network\"')",
     "network: tests that require internet access (deselected by default)",
 ]
 filterwarnings = ["error::DeprecationWarning:tngd_rag.*"]
@@ -87,14 +87,10 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 # Import sorting is off on purpose, imports stay in one compact block
 select = ["E", "F", "W", "B", "UP", "C4", "SIM", "RUF"]
-ignore = [
-    "E501",    # line length is handled by the formatter
-    "B008",    # function calls in argument defaults are used deliberately here
-    "SIM105",  # contextlib.suppress is not always clearer than try/except
-]
+# Line length is handled by the formatter
+ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]
 # These two hold smart quotes on purpose, since their job is normalising them
 "src/tngd_rag/text.py" = ["RUF001"]
 "tests/test_text.py" = ["RUF001"]
