@@ -56,8 +56,8 @@ dev = [
 ]
 
 [project.scripts]
-tngd-rag = "tngd_rag.cli:main"
-tngd-rag-api = "tngd_rag.api.app:run"
+tngd-faq-rag = "tngd_rag.cli:main"
+tngd-faq-rag-api = "tngd_rag.api.app:run"
 
 [project.urls]
 Homepage = "https://github.com/purplingC/tng-faq-rag-system-1"

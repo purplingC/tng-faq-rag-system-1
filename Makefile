@@ -58,7 +58,7 @@ ui:
 
 # Serve the REST API on port 8080, docs at /docs
 api:
-	TNGD_API_PORT=8080 $(VENV)/bin/tngd-rag-api
+	TNGD_API_PORT=8080 $(VENV)/bin/tngd-faq-rag-api
 
 # Build the container image
 docker-build:
