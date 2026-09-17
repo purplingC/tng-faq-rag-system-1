@@ -1,8 +1,5 @@
-"""Dataclasses shared across layers.
-
-They live here so a layer can name a type without importing the layer that
-builds it. The reranker takes a Candidate without pulling in the retriever.
-"""
+"""The file only defines the shapes of data that get passed around the system. 
+    Shared data types, so modules can use them without importing each other."""
 
 from __future__ import annotations
 import dataclasses
