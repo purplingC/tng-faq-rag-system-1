@@ -123,4 +123,4 @@ clean:
 
 # Remove the virtualenv, scraped data and build artefacts
 distclean: clean
-	rm -rf $(VENV) build dist src/*.egg-info data/tngd_faq.json data/tngd_faq.csv
+	rm -rf $(VENV) build dist src/*.egg-info data/tngd_faq.csv
