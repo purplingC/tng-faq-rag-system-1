@@ -6,16 +6,17 @@ import sys
 
 LOG = logging.getLogger("tngd_faq_rag")
 
+LOG_FORMAT = "%(asctime)s %(levelname)-7s %(name)s | %(message)s"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 
 def setup_logging(verbose: bool = False) -> None:
-    level = logging.DEBUG if verbose else logging.INFO
+    """Send logs to stderr, so stdout stays clean for JSON output."""
     handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(
-        logging.Formatter(
-            "%(asctime)s %(levelname)-7s %(name)s | %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-    )
-    LOG.handlers[:] = [handler]
-    LOG.setLevel(level)
+    handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
+
+    LOG.handlers.clear()
+    LOG.addHandler(handler)
+    LOG.setLevel(logging.DEBUG if verbose else logging.INFO)
+
     LOG.propagate = False
