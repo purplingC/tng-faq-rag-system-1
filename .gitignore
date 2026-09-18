@@ -24,9 +24,9 @@ htmlcov/
 .tngd_index/
 .tngd_index_eval/
 
-# Scraped exports, except the full FAQ file a fresh clone answers from
+# Scraped exports, except the full FAQ files in each language
 data/*
-!data/tngd_faq.json
+!data/tngd_faq*.json
 
 # Local secrets
 .env
