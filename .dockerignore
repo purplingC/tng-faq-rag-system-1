@@ -1,0 +1,29 @@
+# Everything here would otherwise be uploaded as build context, .venv alone is 190 MB
+
+.venv/
+venv/
+.git/
+.github/
+.tngd_index/
+.tngd_index_eval/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Local config and scraped exports, keeping the full FAQ file
+.env
+data/*
+!data/tngd_faq.json
+
+docs/
+tests/
+Makefile
+scripts/
+.DS_Store
