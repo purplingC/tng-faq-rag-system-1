@@ -10,6 +10,7 @@ from typing import Any
 @dataclass
 class FaqDoc:
     """One verified FAQ entry. The unit of provenance."""
+
     doc_id: str
     question: str
     answer: str
@@ -27,10 +28,11 @@ class IngestionReport(dict[str, Any]):
 @dataclass
 class Chunk:
     """A slice of one FAQ entry, sized to embed and index."""
+
     chunk_id: str
     parent_id: str
-    text: str   # The text that gets embedded and indexed
-    answer_slice: str   # Answer portion only, for extraction and citation
+    text: str  # The text that gets embedded and indexed
+    answer_slice: str  # Answer portion only, for extraction and citation
     question: str
     url: str
     category: str
@@ -48,6 +50,7 @@ class Chunk:
 @dataclass
 class Candidate:
     """A chunk moving through retrieval, carrying the scores it earned."""
+
     chunk_id: str
     parent_id: str
     text: str
@@ -61,7 +64,7 @@ class Candidate:
     lexical_score: float = 0.0
     fuzzy_score: float = 0.0
     rrf_score: float = 0.0
-    relevance: float = 0.0   # Absolute and calibrated, in [0, 1], never normalised across candidates
+    relevance: float = 0.0  # Absolute and calibrated, in [0, 1], never normalised across candidates
     sources: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict[str, Any]:
@@ -88,6 +91,7 @@ class Candidate:
 
 class Action:
     """What a guardrail decided to do about the text it saw."""
+
     ALLOW = "allow"
     BLOCK = "block"
     SAFE_COMPLETE = "safe_complete"  # Refuse, but answer with a helpful message
@@ -96,9 +100,10 @@ class Action:
 @dataclass
 class Verdict:
     """One guardrail's ruling on a question or an answer."""
+
     action: str = Action.ALLOW
     category: str = ""
-    severity: float = 0.0   # How serious the match is, from 0 to 1
+    severity: float = 0.0  # How serious the match is, from 0 to 1
     reason: str = ""
     matched: list[str] = field(default_factory=list)
     message: str = ""
@@ -120,19 +125,21 @@ class Verdict:
 @dataclass
 class Rule:
     """A pattern a guardrail matches text against, and what to do on a hit."""
+
     name: str
     category: str
     severity: float
     pattern: re.Pattern
     exempt: re.Pattern | None = None
     action: str = Action.BLOCK
-    on_normalized: bool = False     # Match the deobfuscated text instead of the raw text
+    on_normalized: bool = False  # Match the deobfuscated text instead of the raw text
     reason: str = ""
 
 
 @dataclass
 class Generation:
     """An answer produced by one generator backend."""
+
     text: str
     backend: str
     used_source_indices: list[int] = field(default_factory=list)
