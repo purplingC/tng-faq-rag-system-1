@@ -1,4 +1,4 @@
-"""This file writes answers through any OpenAI-compatible endpoint, using only urllib."""
+"""This file writes answers through the configured chat endpoint, using only urllib."""
 
 from __future__ import annotations
 import json
@@ -12,7 +12,7 @@ from .base import Generator, PromptBuilder
 
 
 class OpenAICompatibleGenerator(Generator):
-    """Any OpenAI-compatible chat completions endpoint, via stdlib urllib."""
+    """Any chat completions endpoint the client can reach, via stdlib urllib."""
 
     name = "api"
 

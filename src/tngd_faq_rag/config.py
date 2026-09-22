@@ -24,7 +24,7 @@ def _env_int(name: str, default: int) -> int:
         return default
 
 
-# Provider endpoints as OpenAI compatible base URLs
+# Chat endpoints, both speaking the same widely used request format
 GEMINI_OPENAI_BASE = "https://generativelanguage.googleapis.com/v1beta/openai"
 OPENAI_BASE = "https://api.openai.com/v1"
 
