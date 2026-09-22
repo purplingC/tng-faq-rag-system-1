@@ -42,6 +42,9 @@ COPY --chown=appuser:appuser src ./src
 COPY --chown=appuser:appuser pyproject.toml README.md LICENSE ./
 COPY --chown=appuser:appuser data/tngd_faq.json ./data/
 
+# The index is written here at build time, so the directory must belong to appuser
+RUN chown appuser:appuser /app
+
 USER appuser
 
 # Build the index at image build time so a cold container is ready immediately
