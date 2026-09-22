@@ -1,11 +1,4 @@
-"""This file loads the data files shipped with the package, like the seed FAQ.
-
-The 30-entry seed knowledge base ships inside the package so that a fresh clone
-answers questions with no setup, no network and no scraping. It is package data
-rather than a repo-level file so it survives `pip install` and is importable
-from anywhere, and it is JSON rather than a Python literal so it can be diffed,
-validated and replaced by the scraper output without touching code.
-"""
+"""This file loads the data files shipped with the package, like the seed FAQ."""
 
 from __future__ import annotations
 import json
@@ -16,11 +9,11 @@ SEED_FILENAME = "tngd_faq_seed.json"
 
 def load_seed_records() -> list[dict[str, Any]]:
     """Return the embedded seed FAQ records."""
-    try:  
+    try:
         from importlib.resources import files
 
         raw = (files(__package__) / SEED_FILENAME).read_text(encoding="utf-8")
-    except Exception:  
+    except Exception:
         from pathlib import Path
 
         raw = (Path(__file__).parent / SEED_FILENAME).read_text(encoding="utf-8")

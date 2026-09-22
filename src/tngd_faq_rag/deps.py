@@ -6,10 +6,7 @@ from .logging_utils import LOG
 
 
 class _Optional:
-    """Probes with find_spec, so nothing heavy loads at startup.
-    Importing torch up front cost about 10 seconds on every run. 
-    NumPy is the exception, loaded early because the numeric code binds it at module scope.
-    """
+    """Probes with find_spec, so nothing heavy loads at startup."""
 
     _NAMES = ("numpy", "faiss", "sentence_transformers", "transformers", "torch", "requests")
 
