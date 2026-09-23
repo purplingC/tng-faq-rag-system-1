@@ -4,6 +4,7 @@ TNGD_FAQ_URL = "https://support.tngdigital.com.my/hc/en-my/categories/3600022804
 TNGD_HELP_BASE = "https://support.tngdigital.com.my"
 TNGD_FAQ_CATEGORY_ID = "360002280493"
 FALLBACK_ANSWER = "I could not find this in the official Touch 'n Go eWallet FAQ, so I would rather not guess. Please check the official help centre: {url}"
+FALLBACK_ANSWER_MS = "Saya tidak menemui maklumat ini dalam FAQ rasmi Touch 'n Go eWallet, jadi saya tidak mahu meneka. Sila rujuk pusat bantuan rasmi: {url}"
 
 SYSTEM_RULES = (
     "You are the official Touch 'n Go eWallet FAQ assistant.\n"
