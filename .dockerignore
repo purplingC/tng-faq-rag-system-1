@@ -7,6 +7,7 @@ venv/
 .tngd_index/
 .tngd_index_eval/
 .tngd_index_ms/
+.tngd_index_eval_ms/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
