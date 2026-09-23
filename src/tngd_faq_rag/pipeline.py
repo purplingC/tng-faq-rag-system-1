@@ -25,6 +25,7 @@ from .constants import (
 )
 from .deps import OPT
 from .embeddings import build_embedder
+from .events import record as record_event
 from .generation import ExtractiveComposer, PromptBuilder, build_generator
 from .generation.base import Generator
 from .guardrails import (
@@ -224,7 +225,9 @@ class RagSystem:
             kw.setdefault("backends", self.backends())
             kw["latency_ms"] = round((time.perf_counter() - t0) * 1000, 2)
             kw["trace"] = trace
-            return self._response(**kw)
+            response = self._response(**kw)
+            record_event(q, response)
+            return response
 
         # Stage 0 empty input
         if not q:
@@ -242,6 +245,7 @@ class RagSystem:
         verdict = self.input_policy.evaluate(q)
         trace.append(f"input_policy:{verdict.action}:{verdict.category or 'clean'}")
         if verdict.blocked:
+            answered_in["language"] = detect_language(q)
             LOG.info("BLOCKED [%s] %r (%s)", verdict.category, q[:70], verdict.reason)
             return finish(
                 retrieved_chunks=[],
@@ -501,12 +505,13 @@ def _build_stack(
     kb_path: Path | None = None,
     force_rebuild: bool = False,
     use_seed: bool = False,
+    language: str = DEFAULT_LANGUAGE,
 ) -> _LanguageStack:
     """Load or build one language's knowledge base, index, generator and grounding check."""
     index_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = index_dir / MANIFEST_NAME
 
-    docs, report = load_documents(cfg, kb_path, use_seed=use_seed)
+    docs, report = load_documents(cfg, kb_path, use_seed=use_seed, language=language)
     kb_hash = _kb_hash(docs)
     embedder = build_embedder(cfg)
 
@@ -633,8 +638,19 @@ def build_system(
 
     # Malay lives in its own index: merging the corpora would change the English term
     # statistics, and with them every threshold measured against the English corpus
-    malay_kb = None if (use_seed or kb_path) else _malay_kb_path(cfg)
-    if malay_kb is not None:
+    malay_kb = None if kb_path else _malay_kb_path(cfg)
+    if use_seed:
+        # The seed ships in both languages, so the evaluation can score Malay offline
+        LOG.info("Malay seed corpus: indexing it as well")
+        stacks["ms"] = _build_stack(
+            cfg,
+            Path(f"{cfg.index_dir}_ms"),
+            prompt_builder,
+            force_rebuild=force_rebuild,
+            use_seed=True,
+            language="ms",
+        )
+    elif malay_kb is not None:
         LOG.info("Malay knowledge base found (%s), indexing it as well", malay_kb)
         stacks["ms"] = _build_stack(
             cfg,
@@ -642,6 +658,7 @@ def build_system(
             prompt_builder,
             kb_path=malay_kb,
             force_rebuild=force_rebuild,
+            language="ms",
         )
 
     return RagSystem(
