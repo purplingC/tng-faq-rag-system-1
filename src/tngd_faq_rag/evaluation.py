@@ -3,7 +3,14 @@
 from __future__ import annotations
 import json
 from typing import Any
-from .golden_set import ABSTAIN_CASES, ALLOW_CASES, BLOCK_CASES, RETRIEVAL_CASES
+from .golden_set import (
+    ABSTAIN_CASES,
+    ALLOW_CASES,
+    BLOCK_CASES,
+    MALAY_ABSTAIN_CASES,
+    MALAY_RETRIEVAL_CASES,
+    RETRIEVAL_CASES,
+)
 from .pipeline import RagSystem
 
 __all__ = ["run_eval", "run_smoke_test"]
@@ -106,6 +113,34 @@ def run_eval(system: RagSystem, *, verbose: bool = False) -> dict[str, Any]:
         "cases": suppressed,
     }
 
+    if "ms" in system.stacks:
+        malay_hits = 0
+        malay_misses: list[str] = []
+        for query, expected in MALAY_RETRIEVAL_CASES:
+            resp = system.ask(query)
+            srcs = resp.get("sources", [])
+            if srcs and expected.lower() in (srcs[0].get("question") or "").lower():
+                malay_hits += 1
+            else:
+                malay_misses.append(f"{query!r} -> expected {expected!r}")
+        malay_abstained = 0
+        malay_answered: list[str] = []
+        for query in MALAY_ABSTAIN_CASES:
+            resp = system.ask(query)
+            if str(resp["decision"]).startswith("abstain") or resp["blocked"]:
+                malay_abstained += 1
+            else:
+                malay_answered.append(f"{query!r} -> {resp['decision']}")
+        results["malay"] = {
+            "n_retrieval": len(MALAY_RETRIEVAL_CASES),
+            "recall@1": round(malay_hits / len(MALAY_RETRIEVAL_CASES), 4),
+            "n_abstain": len(MALAY_ABSTAIN_CASES),
+            "abstained": malay_abstained,
+            "abstain_rate": round(malay_abstained / len(MALAY_ABSTAIN_CASES), 4),
+            "retrieval_misses": malay_misses,
+            "answered_cases": malay_answered,
+        }
+
     _print_eval(results, system)
     return results
 
@@ -141,6 +176,12 @@ def _print_eval(r: dict[str, Any], system: RagSystem) -> None:
     print(f"False positives  n={fp['n']:<4} wrongly blocked={fp['blocked']}  rate={fp['rate']:.3f}")
     sc = r["kb_self_censorship"]
     print(f"KB self-censor   n={sc['n']:<4} suppressed answers={sc['suppressed']}")
+    if "malay" in r:
+        ml = r["malay"]
+        print(
+            f"Malay            n={ml['n_retrieval']:<4} recall@1={ml['recall@1']:.3f}  "
+            f"refused={ml['abstained']}/{ml['n_abstain']}  rate={ml['abstain_rate']:.3f}"
+        )
     print(bar)
     for label, section_key, key in (
         ("RETRIEVAL MISSES", "retrieval", "misses"),
@@ -148,6 +189,8 @@ def _print_eval(r: dict[str, Any], system: RagSystem) -> None:
         ("ADVERSARIAL LEAKS", "adversarial", "leaks"),
         ("FALSE BLOCKS", "false_positives", "cases"),
         ("KB ANSWERS SUPPRESSED", "kb_self_censorship", "cases"),
+        ("MALAY RETRIEVAL MISSES", "malay", "retrieval_misses"),
+        ("MALAY CASES ANSWERED INSTEAD OF REFUSED", "malay", "answered_cases"),
     ):
         items = r.get(section_key, {}).get(key) or []
         if items:
