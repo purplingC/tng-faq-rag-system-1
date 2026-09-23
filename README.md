@@ -2,8 +2,8 @@
 
 A grounded, guardrailed **Retrieval-Augmented Generation** system that answers
 questions about the Touch 'n Go eWallet using **only verified TNG Digital FAQ
-content**, and refuses everything else — out-of-scope questions, prompt
-injection, PII requests and illicit instructions.
+content**, in **English or Malay**, and refuses everything else — out-of-scope
+questions, prompt injection, PII requests and illicit instructions.
 
 > **This is a rebuild of an earlier project of mine**,
 > [`purplingC/faq-rag-system`](https://github.com/purplingC/faq-rag-system).
@@ -21,19 +21,21 @@ ask_tngd_bot("What is TNG eWallet SOS Balance?")
 ```
 
 **Zero runtime dependencies.** The default pipeline is implemented against the
-Python standard library, so a fresh clone answers questions offline, with no
-model download and no `pip install`. Every heavyweight backend
+Python standard library, so a fresh clone answers questions offline, with nothing
+to install but the package itself and no model download. Every heavyweight backend
 (sentence-transformers, FAISS, transformers, an LLM API) is optional, detected
 at runtime, and upgrades the system in place.
 
 | | |
 | --- | --- |
+| Knowledge base | **2,477** English + **1,975** Malay articles, shipped in the repo |
 | Retrieval (seed corpus) | recall@1 **0.962** · recall@4 **1.000** · MRR **0.981** |
+| Malay (golden set) | recall@1 **1.000** · refusals **6 / 7** without an LLM key |
 | Out-of-scope questions refused | **13 / 13** |
 | Adversarial prompts blocked | **23 / 23**, correct category 23/23, English and Malay |
 | Ordinary support questions wrongly blocked | **0 / 18** golden set, **0 / 4,452** real FAQ questions |
 | Verified answers ever suppressed | **0** |
-| Latency | **2–5 ms** per question, single-threaded, no GPU |
+| Latency | median **12 ms** on the full FAQ (p95 108 ms), **2 ms** on the seed corpus, no GPU |
 | Tests | **322** passing, none touching the network |
 
 ---
@@ -245,8 +247,9 @@ tng-faq-rag-system-1/
 ├── README.md                    ← you are here
 ├── pyproject.toml               packaging, extras, ruff/mypy/pytest config
 ├── Makefile                     make help
+├── LICENSE                      MIT, code only
 ├── .env.example                 every environment variable, documented
-├── .github/workflows/ci.yml     tests on 3.9–3.13 + a bare-interpreter job
+├── .github/workflows/ci.yml     Linux/macOS/Windows, Python 3.9–3.13, Docker, bare interpreter
 │
 ├── src/tngd_faq_rag/
 │   ├── __init__.py              public surface: ask_tngd_bot
@@ -264,12 +267,12 @@ tng-faq-rag-system-1/
 │   ├── store.py                 SQLite, thread-local connections
 │   ├── retrieval.py             hybrid retrieval, RRF fusion, MMR
 │   ├── reranking.py             absolute-relevance rerankers
-│   ├── llm.py                   OpenAI-compatible chat client (stdlib only)
+│   ├── llm.py                   chat client for Gemini and similar (stdlib only)
 │   ├── env.py                   .env loader (stdlib only)
 │   ├── language.py              guesses Malay or English from the question
 │   ├── events.py                optional JSONL event log, redacted
 │   ├── guardrails/              input policy, injection, answerability, grounding
-│   ├── generation/              extractive │ local seq2seq │ OpenAI-compatible
+│   ├── generation/              extractive │ local seq2seq │ hosted chat API
 │   ├── pipeline.py              orchestration, persistence, ask_tngd_bot
 │   ├── scraper.py               Zendesk Help Centre harvesting
 │   ├── web/                     stdlib chat UI (human-facing demo)
@@ -284,13 +287,13 @@ tng-faq-rag-system-1/
 ├── tests/                       322 tests, no network access
 ├── Dockerfile  .dockerignore  docker-compose.yml
 └── docs/
-│   ├── architecture.md          diagrams, module map, design rules
-│   ├── api.md                   endpoints, auth, design decisions
-│   ├── chunking.md              strategy and rationale
-│   ├── retrieval.md             fusion, calibration, known failure modes
-│   ├── guardrails.md            threat model and the six layers
-│   ├── evaluation.md            methodology and results
-│   └── original-issues.md       what was wrong before, and the proof
+    ├── architecture.md          diagrams, module map, design rules
+    ├── api.md                   endpoints, auth, design decisions
+    ├── chunking.md              strategy and rationale
+    ├── retrieval.md             fusion, calibration, known failure modes
+    ├── guardrails.md            threat model and the six layers
+    ├── evaluation.md            methodology and results
+    └── original-issues.md       what was wrong before, and the proof
 ```
 
 ---
@@ -320,6 +323,7 @@ plus a strict superset, safe to ignore:
 | --- | --- |
 | `url` | Source URL for the answer — always the article the answer came from |
 | `sources` | Ranked list with `relevance`, `category` and a `cited` flag |
+| `language` | Which knowledge base answered, `en` or `ms` |
 | `decision` | Which branch produced the answer (see below) |
 | `confidence` | Calibrated `[0, 1]` retrieval confidence |
 | `safety` | Input verdict, output verdict, grounding score, per-sentence citations |
@@ -347,12 +351,15 @@ plus a strict superset, safe to ignore:
 ```mermaid
 flowchart LR
   Q["User question"] --> G1{"Input guardrails"}
-  G1 -->|block| BR["Refusal"]
-  G1 -->|allow| R["Hybrid retrieval<br/>dense + BM25 + exact"]
+  G1 -->|block| BR["Refusal, in the asked language"]
+  G1 -->|allow| L{"Malay or English?"}
+  L --> R["Hybrid retrieval<br/>dense + BM25 + exact<br/>in that language"]
   R --> F["RRF fusion → rerank → MMR"]
   F --> AB{"confidence ≥ τ?"}
   AB -->|no| ABST["Abstain, link the FAQ"]
-  AB -->|yes| GEN["Generate"]
+  AB -->|yes| ANS{"LLM: does it answer?<br/>optional"}
+  ANS -->|no| ABST
+  ANS -->|yes| GEN["Generate"]
   GEN --> GR{"Grounding + numeric check"}
   GR -->|fail| ABST
   GR -->|pass| OG{"Output guardrails"}
@@ -370,10 +377,17 @@ Rank Fusion, reranked to an **absolute** `[0, 1]` relevance and diversified with
 MMR. Scores are never normalised across candidates, which is what makes the
 abstention threshold reachable. → [docs/retrieval.md](docs/retrieval.md)
 
-**Guardrails** — five layers, intent-scoped rather than keyword-based, with
+**Guardrails** — six layers, intent-scoped rather than keyword-based, with
 obfuscation normalisation, Luhn-validated card detection, a grounding gate that
 checks every asserted number, and an output policy that never touches trusted
 corpus text. → [docs/guardrails.md](docs/guardrails.md)
+
+**Languages** — a question is routed to the English or Malay knowledge base by its
+own wording, and answered from that corpus, so a Malay question gets a Malay answer
+and a Malay refusal. Each language keeps a separate index: merging them would change
+the term statistics every English threshold was measured against. A weak Malay match
+falls back to English, since many answers exist only there.
+→ [docs/retrieval.md](docs/retrieval.md)
 
 **Generation** — defaults to an extractive composer that assembles answers from
 verified source sentences, so it *cannot* hallucinate and needs no model. An
@@ -394,9 +408,10 @@ articles across 253 categories, scraped from the TNG eWallet help centre on
 
 A 30-entry seed corpus (`src/tngd_faq_rag/resources/tngd_faq_seed.json`) ships
 inside the package too, with 29 of those articles in Malay
-(`tngd_faq_seed_ms.json`) so the evaluation scores both languages offline. The tests and `tngd-faq-rag eval` always use it, so their
-numbers stay reproducible while the live site changes, and it is the fallback
-when `data/tngd_faq.json` is absent.
+(`tngd_faq_seed_ms.json`) so the evaluation scores both languages offline. The
+tests and `tngd-faq-rag eval` always use the seed, so their numbers stay
+reproducible while the live site changes, and it is the fallback when
+`data/tngd_faq.json` is absent.
 
 **Malay is answered too.** `data/tngd_faq_ms.json` holds 1,975 Malay articles,
 1,955 of which are translations of an English one. A Malay question is answered
@@ -621,9 +636,9 @@ make check         # everything CI runs
 pytest -m network  # opt in to the live-scraper test
 ```
 
-CI runs on Python 3.9–3.13 across Linux, macOS and Windows, and includes a job
-that installs with `--no-deps` on a bare interpreter — that job is what proves
-the zero-dependency claim rather than merely asserting it.
+CI runs on Python 3.9–3.13 across Linux, macOS and Windows, builds the Docker image
+and calls the running container, and installs with `--no-deps` on a bare interpreter
+— that last job is what proves the zero-dependency claim rather than asserting it.
 
 ---
 

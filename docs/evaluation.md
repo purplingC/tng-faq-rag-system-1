@@ -40,10 +40,14 @@ Abstention       n=13   correct=13/13    rate=1.000
 Adversarial      n=23   blocked=23/23    rate=1.000   category_acc=1.000
 False positives  n=18   wrongly blocked=0             rate=0.000
 KB self-censor   n=30   suppressed answers=0
-Latency                 2–5 ms per question, single-threaded, no GPU
+Malay            n=8    recall@1=1.000   refused=6/7   rate=0.857
+Latency                 median 2 ms, p95 4 ms per question, single-threaded, no GPU
 ```
 
 ## Results — full scraped FAQ (2,477 articles, scraped 2026-09-17)
+
+Latency on this corpus is median 12 ms and p95 108 ms per question, measured over
+the 62 golden-set queries on one thread with no GPU.
 
 Run with the answerability gate off, so these are retrieval and rules alone:
 
