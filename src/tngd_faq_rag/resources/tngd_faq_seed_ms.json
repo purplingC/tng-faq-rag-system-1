@@ -1,0 +1,176 @@
+[
+  {
+    "question": "Kenapa saya perlu mengesahkan kad saya yang disimpan di TNG eWallet?",
+    "answer": "Visa dan Mastercard mewajibkan kami untuk mengesahkan pemilikan kad dan menyediakan maklumat tambahan tentang pemegang kad apabila anda menambah nilai TNG eWallet anda. Pengesahan kad yang disimpan membantu kami memenuhi keperluan ini dan memastikan transaksi anda kekal selamat.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51913891795097-Kenapa-saya-perlu-mengesahkan-kad-saya-yang-disimpan-di-TNG-eWallet",
+    "category": "Pengesahan Kad Tambah Nilai"
+  },
+  {
+    "question": "Mengapa TNG eWallet meminta saya untuk mengesahkan kad saya?",
+    "answer": "Kami perlu mengesahkan bahawa kad yang anda gunakan untuk menambah nilai eWallet adalah milik anda. Visa dan Mastercard kini mewajibkan semua peniaga yang menerima kad debit dan kredit mereka untuk menyertakan maklumat tambahan pemegang kad semasa memproses tambah nilai. Jika kad tersebut bukan milik anda, sila pilih \"It's someone else's card\" pada paparan pop-up dan berikan maklumat yang diminta.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51913921983769-Mengapa-TNG-eWallet-meminta-saya-untuk-mengesahkan-kad-saya",
+    "category": "Pengesahan Kad Tambah Nilai"
+  },
+  {
+    "question": "Bila saya akan perlu mengesahkan kad yang disimpan?",
+    "answer": "Satu notifikasi \"pop-up\" pada skrin utama TNG eWallet anda akan menunjukkan bilangan hari yang tinggal untuk anda mengesahkan kad utama yang disimpan. Pastikan anda melengkapkan pengesahan sebelum kiraan masa tamat bagi mengelakkan sebarang gangguan semasa menambah nilai menggunakan kad debit atau kredit anda. Penambahan nilai melalui DuitNow Transfer dan PIN tambah nilai tidak terjejas.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51913855530905-Bila-saya-akan-perlu-mengesahkan-kad-yang-disimpan",
+    "category": "Pengesahan Kad Tambah Nilai"
+  },
+  {
+    "question": "Apakah informasi yang diperlukan jika kad yang disimpan di eWallet milik saya?",
+    "answer": "Jika kad tersebut milik anda, tiada informasi tambahan diperlukan. Anda hanya perlu tekan \"It's my card\" untuk meneruskan.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51913858803865-Apakah-informasi-yang-diperlukan-jika-kad-yang-disimpan-di-eWallet-milik-saya",
+    "category": "Pengesahan Kad Tambah Nilai"
+  },
+  {
+    "question": "Apakah TNG eWallet SOS Balance?",
+    "answer": "SOS Balance adalah ciri eksklusif yang direka khas untuk pengguna setia TNG eWallet. Buat masa sekarang, ciri ini hanya tersedia untuk pembayaran tol. Ciri ini memastikan anda tidak tersekat pada saat-saat genting akibat baki eWallet tidak mencukupi dengan menampung pembayaran penting bagi pihak anda. Hanya tambah nilai eWallet anda dalam tempoh 24 jam dan baki SOS Balance yang tertunggak akan ditolak secara automatik. Lebih banyak perkhidmatan akan ditambah ke SOS Balance tidak lama lagi, menjadikan ciri ini lebih berbaloi dan mudah untuk anda gunakan. Ketahui Lanjut",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/40801181483289-Apakah-TNG-eWallet-SOS-Balance",
+    "category": "SOS Balance"
+  },
+  {
+    "question": "Adakah terdapat had jumlah kenderaan bagi setiap pengguna SOS Balance yang layak?",
+    "answer": "Tidak, tiada had selagi tag RFID kenderaan dan kad Touch 'n Go yang dipautkan untuk potongan PayDirect didaftarkan pada akaun eWallet TNG eWallet pengguna yang layak.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/42589782721561-Adakah-terdapat-had-jumlah-kenderaan-bagi-setiap-pengguna-SOS-Balance-yang-layak",
+    "category": "SOS Balance"
+  },
+  {
+    "question": "Apakah itu Portal Pengguna Touch 'n Go?",
+    "answer": "Portal Pengguna Touch 'n Go ialah platform bersama untuk pengguna Touch 'n Go dan TNG eWallet. Ia membolehkan anda melihat, mengurus dan menjejak transaksi daripada eWallet, Touch 'n Go Card dan tag RFID anda di satu tempatyang mudah.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51471937190937-Apakah-itu-Portal-Pengguna-Touch-n-Go",
+    "category": "Portal Pengguna"
+  },
+  {
+    "question": "Bagaimanakah cara untuk log masuk ke Portal Pengguna Touch 'n Go?",
+    "answer": "Untuk log masuk, ikuti langkah berikut: - Layari https://consumer.touchngo.com.my dan imbas kod QR di laman utama menggunakan eWallet anda - Masukkan PIN eWallet 6-digit anda - Lengkapkan pengesahan pengecaman wajah - Anda akan berjaya log masuk",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51471911979673-Bagaimanakah-cara-untuk-log-masuk-ke-Portal-Pengguna-Touch-n-Go",
+    "category": "Portal Pengguna"
+  },
+  {
+    "question": "Apa yang perlu saya lakukan jika program mini EV Charging tidak menunjukkan stesen pengecas terdekat?",
+    "answer": "Pastikan servis lokasi telefon bimbit anda diaktifkan dan TNG eWallet mempunyai kebenaran untuk mendapatkan akses lokasi terkini anda. Jika isu ini masih terjadi, sila muat semula aplikasi.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51601790191641-Apa-yang-perlu-saya-lakukan-jika-program-mini-EV-Charging-tidak-menunjukkan-stesen-pengecas-terdekat",
+    "category": "EV Charging"
+  },
+  {
+    "question": "Apa yang perlu saya lakukan jika sesi pengecasan tidak berlaku?",
+    "answer": "Jika sesi pengecasan anda tidak bermula, sila ikut langkah tersebut untuk melakukan pengecasan semula: - Periksa kabel. Pastikan pengecas disambung secara sempurna di kedua-dua kereta elektrik dan stesen. Tekan sedikit kuat jika perlu. - Periksa internet anda. Pastikan telefon bimbit anda mempunya sambungan internet yang stabil. - Lakukan semula sesi pengecasan.Muat semula program mini EV Charging dan cuba mulakan pengecasan sekali lagi. - Cari mesej ralat. Periksa program mani atau skrin pengecas untuk arahan atau mesej ralat. - Cuba pengecas yang lain. Jika perlu, tukar ke tapak pengecas yang lain. - Masih gagal berfungsi? Hubungi TNG eWallet melalui Chat. Berikan ID pengecas, model kenderaan elektrik anda, dan keterangan ringkas isu yang dihadapi.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51601991509401-Apa-yang-perlu-saya-lakukan-jika-sesi-pengecasan-tidak-berlaku",
+    "category": "EV Charging"
+  },
+  {
+    "question": "Bolehkah saya masih membuat laporan jika transaksi tidak sah berlaku lebih daripada 90 hari yang lalu?",
+    "answer": "Kami faham bahawa situasi ni boleh menimbulkan kebimbangan. Namun, untuk membolehkan siasatan dijalankan dengan baik, laporan mesti dibuat dalam tempoh 90 hari dari tarikh transaksi tidak sah tersebut berlaku.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/48893081994649-Bolehkah-saya-masih-membuat-laporan-jika-transaksi-tidak-sah-berlaku-lebih-daripada-90-hari-yang-lalu",
+    "category": "Lapor Transaksi Tidak Sah"
+  },
+  {
+    "question": "Bolehkah saya melaporkan transaksi yang sama kepada Pusat Respons Penipuan Kebangsaan? (NSRC)",
+    "answer": "Boleh, tetapi masa yang diambil amat kritikal. NSRC tempat paling sesuai untuk membantu dengan segera sebaik sahaja menyedari bahawa anda telah menjadi mangsa scam. Anda perlu menghubungi mereka dalam masa 24 jam selepas kejadian kerana ini meningkatkan peluang untuk menghentikan wang daripada dihantar lebih jauh. Anda boleh menghubungi talian hotline NSRC di 997, yang dibuka setiap hari 24 jam. Sediakan maklumat seperti nama, nombor telefon bimbit, tarikh dan masa transaksi, serta jumlah yang terlibat. Sila ambil perhatian: Jika anda sudah menghantar laporan kepada NSRC untuk transaksi yang sama, anda tidak perlu laporkan kepada kami. Satu laporan untuk setiap kes sudah mencukupi.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/48892880902681-Bolehkah-saya-melaporkan-transaksi-yang-sama-kepada-Pusat-Respons-Penipuan-Kebangsaan-NSRC",
+    "category": "Lapor Transaksi Tidak Sah"
+  },
+  {
+    "question": "Apakah jenis peniaga yang dipengaruhi oleh pelaksanaan e-Invois?",
+    "answer": "Semua peniaga dan rakan kongsi TNGD terlibat dalam pelaksanaan e-Invois.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/43948524013465-Apakah-jenis-peniaga-yang-dipengaruhi-oleh-pelaksanaan-e-Invois",
+    "category": "eInvoice"
+  },
+  {
+    "question": "Apakah faedah e-Invois?",
+    "answer": "Pelaksanaan e-Invois menawarkan banyak kelebihan, termasuk: - Kesilapan manusia yang minimum melalui pengendalian data elektronik - Proses invois yang dipercepatkan - Kos operasi melalui automasi yang dikurangkan - Pengurusan dan akses data kewangan yang lebih mudah.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/43948417368473-Apakah-faedah-e-Invois",
+    "category": "eInvoice"
+  },
+  {
+    "question": "Apa itu CardMatch?",
+    "answer": "CardMatch ialah ciri pada aplikasi TNG eWallet di mana anda boleh lihat dan mohon kad kredit yang tersedia khas oleh Bank Rakan Kongsi kami.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51398970213401-Apa-itu-CardMatch",
+    "category": "CardMatch"
+  },
+  {
+    "question": "Bagaimanakah cara saya boleh guna CardMatch?",
+    "answer": "Anda boleh lihat dan banding antara pelbagai pilihan kad kredit sebelum mohon kad yang tersuai dengan keperluan anda.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/51398949331609-Bagaimanakah-cara-saya-boleh-guna-CardMatch",
+    "category": "CardMatch"
+  },
+  {
+    "question": "Apakah Near Me di TNG eWallet?",
+    "answer": "Near Me adalah satu ciri yang membantu anda mencari restoran berhampiran berdasarkan ulasan sebenar daripada pengguna lain. Ia menyediakan maklumat penting seperti waktu operasi, lokasi, jarak dan butiran untuk dihubungi. Selain itu, anda juga boleh melihat penilaian pengguna serta menemui tawaran eksklusif daripada peniaga yang mengambil bahagian.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/40947828970265-Apakah-Near-Me-di-TNG-eWallet",
+    "category": "Near Me"
+  },
+  {
+    "question": "Adakah saya layak untuk melabur melalui e-Mas?",
+    "answer": "Pengguna TNG eWallet yang berumur 18 tahun ke atas dan telah melengkapkan proses pengesahan akaun melalui eKYC boleh melabur dalam e-Mas. Tertakluk pada syarat-syarat tambahan, dan kami akan memberitahu anda jika terdapat apa-apa kemaskini dari semasa ke semasa.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/23398857402649-Adakah-saya-layak-untuk-melabur-melalui-e-Mas",
+    "category": "e-Mas"
+  },
+  {
+    "question": "Bagaimanakah saya boleh menyemak nilai pelaburan emas semasa jika saya ingin menjual emas pada kadar pasaran?",
+    "answer": "Memantau harga pelaburan emas di TNG eWallet mudah sahaja. Ikuti 3 langkah-langkah di bawah: Langkah 1: Di halaman e-Mas, tekan \"Sell Gold\". Langkah 2: Seterusnya, tekan \"Sell All\" dan tekan \"Calculate\". Langkah 3: Sekarang anda boleh melihat nilai emas semasa berdasarkan kadar pasaran terkini.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/33652476995097-Bagaimanakah-saya-boleh-menyemak-nilai-pelaburan-emas-semasa-jika-saya-ingin-menjual-emas-pada-kadar-pasaran",
+    "category": "e-Mas"
+  },
+  {
+    "question": "Apa itu Zakat?",
+    "answer": "Zakat adalah bentuk wajib sedekah dalam Islam, bertujuan untuk mengagihkan semula kekayaan dan membantu golongan yang memerlukan. Zakat adalah waji bagi umat Islam yang memenuhi kriteria kekayaan tertentu, melibatkan memberikan sebahagian kekayaan mereka setiap tahun untuk membantu golongan miskin dan yang memerlukan lain.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/30231193503257-Apa-itu-Zakat",
+    "category": "Zakat"
+  },
+  {
+    "question": "Adakah Touch n Go Digital adalah amil zakat yang sah/ rasmi?",
+    "answer": "Ya, kami adalah pemungut zakat rasmi yang telah dilantik oleh badan zakat tersebut.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/30231164495129-Adakah-Touch-n-Go-Digital-adalah-amil-zakat-yang-sah-rasmi",
+    "category": "Zakat"
+  },
+  {
+    "question": "Adakah saya akan menerima cukai jalan fizikal?",
+    "answer": "Tidak, anda tidak akan menerima cukai jalan fizikal berkuat kuasa mulai 1 Okt 2023. Anda dikehendaki memuat turun aplikasi MyJPJ untuk melihat cukai jalan digital anda. Bagaimanapun, kita masih membuka pilihan 'cukai jalan fizikal' untuk warga asing memandangkan warga asing tidak boleh mendaftar akaun dengan MyJPJ.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/34155059178265-Adakah-saya-akan-menerima-cukai-jalan-fizikal",
+    "category": "Road Tax"
+  },
+  {
+    "question": "Bolehkah saya memperbaharui lebih dari satu cukai jalan?",
+    "answer": "Ya, anda boleh memperbaharui seberapa banyak permohonan cukai jalan yang anda mahukan asalkan anda mempunyai Nama Pemilik,Nombor Plat,Nombor ID / Pasport dan butiran kenderaan.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/14374643747865-Bolehkah-saya-memperbaharui-lebih-dari-satu-cukai-jalan",
+    "category": "Road Tax"
+  },
+  {
+    "question": "Bilakah tempoh pembayaran balik bermula?",
+    "answer": "Pembayaran balik bermula 14 hari dari tarikh anda berjaya menyelesaikan transaksi SOS Top Up anda.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/21576183749529-Bilakah-tempoh-pembayaran-balik-bermula",
+    "category": "SOS Top Up"
+  },
+  {
+    "question": "Apakah SOS Top Up?",
+    "answer": "SOS Top Up adalah perkhidmatan yang membenarkan anda untuk mendapat kredit prabayar terlebih dahulu untuk dibayar nanti.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/21576244550681-Apakah-SOS-Top-Up",
+    "category": "SOS Top Up"
+  },
+  {
+    "question": "Apakah perbezaan antara TNG eWallet Soundbox Pocket dan TNG eWallet TransferMATE?",
+    "answer": "Kedua-dua model Soundbox tidak sama kerana TNG eWallet Soundbox Pocket ialah untuk peniaga manakala TNG eWallet Soundbox TransferMATE ialah untuk pengguna TNG eWallet. Berikut adalah perbezaan: Kelayakan: TNG eWallet Soundbox Pocket Peniaga yang berdaftar dengan TNG eWallet; TNG eWallet Soundbox TransferMATE Pengguna yang berdaftar dengan TNG eWallet. Di mana untuk beli: TNG eWallet Soundbox Pocket Dari Merchant Dashboard; TNG eWallet Soundbox TransferMATE Dari bahagian \"Receive\" di halaman \"Transfer\" di eWallet anda. Pautan ke: TNG eWallet Soundbox Pocket Akaun eWallet peniaga; TNG eWallet Soundbox TransferMATE Akaun eWallet pengguna. Kod QR: TNG eWallet Soundbox Pocket Datang dengan 2 kod QR peniaga Kod QR TNG eWallet peniaga (hitam) Kod QR DuitNow QR (merah jambu); TNG eWallet Soundbox TransferMATE Datang dengan 1 kod QR: Kod QR TNG untuk akaun eWallet peribadi (hitam) yang dipautkan ke akaun eWallet anda. Makluman: TNG eWallet Soundbox Pocket Apabila pelanggan mengimbas salah satu kod QR di atas untuk membuat bayaran; TNG eWallet Soundbox TransferMATE Apabila pengguna TNG eWallet lain mengimbas kod QR anda dan melakukan pindahan biasa.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/42361637466265-Apakah-perbezaan-antara-TNG-eWallet-Soundbox-Pocket-dan-TNG-eWallet-TransferMATE",
+    "category": "Soundbox TransferMate"
+  },
+  {
+    "question": "Berapa lama masa untuk pesanan TNG eWallet Soundbox TransferMate saya tiba? Bolehkah saya menjejaki status penghantarannya?",
+    "answer": "Penghantaran akan dibuat dalam tempoh 14 hari bekerja dari tarikh pembelian.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/38589012119577-Berapa-lama-masa-untuk-pesanan-TNG-eWallet-Soundbox-TransferMate-saya-tiba-Bolehkah-saya-menjejaki-status-penghantarannya",
+    "category": "Soundbox TransferMate"
+  },
+  {
+    "question": "Bagaimana untuk mengetahui item yang boleh membayar dengan Points TnGD?",
+    "answer": "Item yang dilabelkan dengan jumlah Points boleh dibayar dengan Points TnGD. Terima kasih kerana menyokong A+ Rewards!",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/33361699069849-Bagaimana-untuk-mengetahui-item-yang-boleh-membayar-dengan-Points-TnGD",
+    "category": "A+ Voyager"
+  },
+  {
+    "question": "Berapa banyak yang boleh diterima oleh pengguna dari Cashback packet?",
+    "answer": "Jumlah adalah secara rawak oleh sistem kepada setiap penerima.",
+    "url": "https://support.tngdigital.com.my/hc/ms-my/articles/22138450756249-Berapa-banyak-yang-boleh-diterima-oleh-pengguna-dari-Cashback-packet",
+    "category": "Cashback Packet (User)"
+  }
+]

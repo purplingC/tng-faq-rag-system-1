@@ -27,7 +27,7 @@ def _coerce_record(raw: Any) -> dict[str, str] | None:
 
 
 def load_documents(
-    cfg: Config, path: Path | None = None, use_seed: bool = False
+    cfg: Config, path: Path | None = None, use_seed: bool = False, language: str = "en"
 ) -> tuple[list[FaqDoc], IngestionReport]:
     """Load the KB: explicit path > scraped file > embedded seed."""
     report = IngestionReport(
@@ -41,7 +41,7 @@ def load_documents(
             raw_records = json.load(fh)
         report["source"] = str(candidate)
     else:
-        raw_records = load_seed_records()
+        raw_records = load_seed_records(language)
         report["source"] = "packaged seed KB"
 
     if isinstance(raw_records, dict):  # tolerate {"articles": [...]} wrappers
