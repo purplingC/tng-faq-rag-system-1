@@ -23,7 +23,18 @@ _CRED_BENIGN = _rx(r"""\b(reset|resetting|change|changing|update|updating|forgot
                         recover|recovering|retrieve\s+my\s+own|set\s?up|setting\s?up|create|
                         creating|enable|disable|secure|protect|lock|unlock|expired?|
                         wrong|incorrect|not\s+working|didn't\s+receive|did\s+not\s+receive|
-                        never\s+received|request\s+a\s+new|resend)\b""")
+                        never\s+received|request\s+a\s+new|resend)\b
+                        | ^\s*(?:what|what's|apakah|apa)\s*(?:is|are|itu|maksud)?\s*
+                          (?:a|an|the)?\s*["\u2018\u2019\u201c\u201d']?\s*
+                          (?:tng\s+|ewallet\s+|tng\s+ewallet\s+)?
+                          (?:reload\s+pin|strong\s+6-digit\s+pin|6-digit\s+pin|pin|otp|tac)\b""")
+
+# A question about a jailbroken or rooted phone is a real support topic, not a jailbreak attempt
+_JAILBREAK_BENIGN = _rx(r"""\b(?:di-?)?jailbreak(?:ed|en)?\b[^.?!]{0,30}
+                            \b(device|devices|phone|iphone|android|peranti|telefon|aplikasi|app)\b
+                          | \b(device|devices|phone|iphone|android|peranti|telefon|aplikasi|app)\b
+                            [^.?!]{0,30}\b(?:di-?)?jailbreak(?:ed|en)?\b
+                          | \brooted?\b[^.?!]{0,25}\b(device|phone|peranti|telefon)\b""")
 
 
 INPUT_RULES: list[Rule] = [
@@ -50,6 +61,7 @@ INPUT_RULES: list[Rule] = [
         "prompt_injection",
         0.9,
         on_normalized=True,
+        exempt=_JAILBREAK_BENIGN,
         reason="obfuscated instruction-override or prompt-extraction attempt",
         pattern=_rx(r"""ignore(?:all|the|any)?(?:previous|prior|above|earlier|preceding)
                        | disregard(?:all|the|any)?(?:previous|prior|above|earlier)
@@ -95,6 +107,7 @@ INPUT_RULES: list[Rule] = [
         "prompt_injection",
         0.92,
         on_normalized=True,
+        exempt=_JAILBREAK_BENIGN,
         reason="jailbreak persona or unrestricted-mode request",
         pattern=_rx(r"""\b(do\s+anything\s+now|developer\s+mode|jailbreak\w*|god\s?mode|
                        sudo\s+mode|root\s+mode|unfiltered|uncensored|opposite\s+day|
@@ -236,6 +249,53 @@ INPUT_RULES: list[Rule] = [
 
 
 # Everyday support questions that must never be blocked, checked before soft rules
+
+# Malay wording for the same attacks: the patterns above are English and match none of it
+INPUT_RULES += [
+    Rule(
+        "override_instructions_ms",
+        "prompt_injection",
+        0.95,
+        on_normalized=True,
+        reason="attempt to override system instructions, in Malay",
+        pattern=_rx(r"""\b(abaikan|lupakan|ketepikan|langkau|buang)\b[^.?!]{0,45}
+                       \b(arahan|peraturan|panduan|prompt|sekatan|polisi|had)\b"""),
+    ),
+    Rule(
+        "exfiltrate_prompt_ms",
+        "prompt_injection",
+        0.95,
+        on_normalized=True,
+        reason="attempt to extract the system prompt, in Malay",
+        pattern=_rx(r"""\b(tunjukkan|tunjuk|paparkan|papar|beritahu|dedahkan|cetak|ulangi|
+                       kongsikan|bocorkan)\b[^.?!]{0,40}
+                       \b(prompt|arahan\s+sistem|peraturan\s+anda|rahsia\s+sistem|
+                       arahan\s+asal|arahan\s+tersembunyi)\b
+                       | \bprompt\s+sistem\b"""),
+    ),
+    Rule(
+        "illicit_activity_ms",
+        "illicit_activity",
+        0.9,
+        on_normalized=True,
+        reason="request for illicit activity, in Malay",
+        pattern=_rx(r"""\b(godam|menggodam|meretas|retas)\b
+                       | \b(curi|mencuri|memalsukan|palsukan|menyamar\s+sebagai)\b
+                         [^.?!]{0,30}\b(akaun|wang|duit|data|maklumat|identiti|kad)\b"""),
+    ),
+    Rule(
+        "third_party_pii_ms",
+        "pii_request",
+        0.9,
+        on_normalized=True,
+        reason="request for another person's data, in Malay",
+        pattern=_rx(r"""\b(pengguna|orang|pelanggan|akaun)\s+lain\b[^.?!]{0,40}
+                       \b(maklumat|data|butiran|transaksi|sejarah|baki|nombor|alamat)\b
+                       | \b(maklumat|data|butiran|transaksi|sejarah|baki)\b[^.?!]{0,30}
+                         \b(pengguna|orang|pelanggan)\s+lain\b"""),
+    ),
+]
+
 BENIGN_CONTEXT = _rx(r"""
     \b(how\s+do\s+i\s+(?:update|change|verify|reset|report|renew|link|unlink|check|enable))\b
   | \b(?:report(?:ing)?|reported)\s+(?:an?\s+)?(?:unauthorised|unauthorized|fraudulent|
