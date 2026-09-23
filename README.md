@@ -644,6 +644,11 @@ the zero-dependency claim rather than merely asserting it.
 * **Malay safety copy has not been reviewed by a native speaker.** Refusals and
   abstentions follow the question's language, and the crisis helpline numbers are
   unchanged, but the Malay wording should be checked before this is used publicly.
+* **Mixed Malay and English questions are fragile.** Malaysians write both at once.
+  *"teach me how to use sos balance"* is answered, while *"**ajar** me how to use sos
+  balance"* is refused: the one unknown word changes which articles rank first. And
+  *"boleh tak I check my sos balance"* is answered **in Malay**, because the language
+  vote picks one language for a question written in two.
 * **Chinese is not supported.** The site has 10 Chinese articles, and the tokenizer
   cannot read Chinese characters. It would need character n-gram tokenising.
 * **Malay grounding is not separately measured.** Retrieval and abstention now have
@@ -682,6 +687,39 @@ Full detail, including what was wrong with the earlier implementation and how it
 was proven, is in [docs/original-issues.md](docs/original-issues.md).
 
 ---
+
+## What I would do next
+
+In the order I would actually do them, with the reason rather than the buzzword.
+
+1. **Meaning-based retrieval.** Install `sentence-transformers` and make it the default
+   when present. It is the single change that fixes the most open problems: the
+   *"top up my eWallet"* miss, *"loan amount for BizCash"* picking the wrong article, and
+   most of the mixed-language fragility above. Cost: a 2.5 GB download and slower cold start.
+2. **Handle code-switching properly.** Score a question against both corpora instead of
+   voting for one language, and answer from whichever scores higher. That removes the
+   "one Malay word flips the answer" failure without needing a language guess at all.
+3. **A Malay golden set for grounding.** Retrieval and abstention are measured; grounding
+   is assumed to behave as it does in English. Same method as the retrieval set: the
+   parallel corpus makes the expected article unambiguous.
+4. **A native speaker reviews the Malay safety copy.** The refusals are mine, and the
+   crisis helplines matter too much to ship on my translation alone.
+5. **Conversational memory.** Every question is answered alone today. Multi-turn needs the
+   follow-up rewritten into a standalone question, then re-screened by the guardrails —
+   rewriting is exactly where an injected instruction could sneak back in.
+6. **Feed the event log back into the FAQ.** The log already lists the questions that got
+   no answer. That list is the highest-value input to both the knowledge base and the
+   golden set, and it costs nothing to collect.
+7. **Cache the answerability judgements across processes.** The cache is per process
+   today, so a restarted API pays for the same judgement again. A small shared cache would
+   cut calls well under the free tier's daily limit.
+8. **Tables with merged cells.** Rows become sentences now, but a multi-level header such
+   as the Tokio Marine premium grid loses which column a number belongs to.
+9. **Chinese, if the corpus grows.** It needs character n-gram tokenising, and today the
+   site has only 10 Chinese articles — not worth it yet.
+10. **A fine-tuned safety classifier** such as Llama Guard, alongside the rules, for novel
+    paraphrased attacks. `InputPolicy` already takes a rule list so it can be added as an
+    extra layer rather than a rewrite.
 
 ## Provenance
 
