@@ -23,6 +23,7 @@ htmlcov/
 # Generated index, rebuilt in seconds with make index
 .tngd_index/
 .tngd_index_eval/
+.tngd_index_ms/
 
 # Scraped exports, except the full FAQ files in each language
 data/*
