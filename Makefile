@@ -73,12 +73,13 @@ ask:
 	$(PY) -m tngd_faq_rag ask "$(Q)"
 
 # Evaluate against the frozen seed corpus
+# Grading is off so the scores are reproducible and cannot hit the free tier's rate limit
 eval:
-	$(PY) -m tngd_faq_rag eval
+	TNGD_ANSWERABILITY=off $(PY) -m tngd_faq_rag eval
 
 # Evaluate against the active knowledge base
 eval-live:
-	$(PY) -m tngd_faq_rag eval --live
+	TNGD_ANSWERABILITY=off $(PY) -m tngd_faq_rag eval --live
 
 # Fast end-to-end check
 smoke:
