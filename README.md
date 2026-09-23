@@ -30,11 +30,11 @@ at runtime, and upgrades the system in place.
 | --- | --- |
 | Retrieval (seed corpus) | recall@1 **0.962** · recall@4 **1.000** · MRR **0.981** |
 | Out-of-scope questions refused | **13 / 13** |
-| Adversarial prompts blocked | **19 / 19**, correct category 19/19 |
-| Ordinary support questions wrongly blocked | **0 / 14** |
+| Adversarial prompts blocked | **23 / 23**, correct category 23/23, English and Malay |
+| Ordinary support questions wrongly blocked | **0 / 18** golden set, **0 / 4,452** real FAQ questions |
 | Verified answers ever suppressed | **0** |
 | Latency | **2–5 ms** per question, single-threaded, no GPU |
-| Tests | **266** passing, none touching the network |
+| Tests | **303** passing, none touching the network |
 
 ---
 
@@ -152,7 +152,7 @@ make install-dev               # venv + package + pytest/ruff/mypy
 make run                       # demo, then chat
 make api                       # REST API
 make ui                        # web chat
-make test                      # 266 tests
+make test                      # 303 tests
 make check                     # lint + types + tests + eval (what CI runs)
 make help                      # every target
 ```
@@ -266,6 +266,7 @@ tng-faq-rag-system-1/
 │   ├── reranking.py             absolute-relevance rerankers
 │   ├── llm.py                   OpenAI-compatible chat client (stdlib only)
 │   ├── env.py                   .env loader (stdlib only)
+│   ├── language.py              guesses Malay or English from the question
 │   ├── guardrails/              input policy, injection, answerability, grounding
 │   ├── generation/              extractive │ local seq2seq │ OpenAI-compatible
 │   ├── pipeline.py              orchestration, persistence, ask_tngd_bot
@@ -273,13 +274,13 @@ tng-faq-rag-system-1/
 │   ├── web/                     stdlib chat UI (human-facing demo)
 │   ├── api/                     FastAPI service (machine-facing, optional)
 │   ├── evaluation.py            metrics harness
-│   ├── golden_set.py            the 72 evaluation cases
+│   ├── golden_set.py            the 80 evaluation cases
 │   └── resources/               packaged 30-entry seed knowledge base
 │
 ├── data/tngd_faq.json           full scraped FAQ, 2,477 articles
-├── data/tngd_faq_ms.json        Malay, 1,975 articles (stored, not used yet)
-├── data/tngd_faq_zh.json        Chinese, 10 articles (stored, not used yet)
-├── tests/                       266 tests, no network access
+├── data/tngd_faq_ms.json        Malay, 1,975 articles, answered from
+├── data/tngd_faq_zh.json        Chinese, 10 articles (stored, not used)
+├── tests/                       303 tests, no network access
 ├── Dockerfile  .dockerignore  docker-compose.yml
 └── docs/
 │   ├── architecture.md          diagrams, module map, design rules
@@ -395,10 +396,25 @@ inside the package too. The tests and `tngd-faq-rag eval` always use it, so thei
 numbers stay reproducible while the live site changes, and it is the fallback
 when `data/tngd_faq.json` is absent.
 
-Malay and Chinese versions are scraped too, into `data/tngd_faq_ms.json` (1,975
-articles) and `data/tngd_faq_zh.json` (10 articles). They are stored for
-completeness but **not used for answering yet**: the tokenizer and guardrails
-are English-first, and the tokenizer cannot read Chinese characters.
+**Malay is answered too.** `data/tngd_faq_ms.json` holds 1,975 Malay articles,
+1,955 of which are translations of an English one. A Malay question is answered
+from the Malay corpus, in Malay.
+
+Each language keeps its **own index**. Merging the two corpora would change the
+English term statistics, and with them every threshold measured against English,
+so they stay separate and the question picks one. Measured:
+
+| | |
+| --- | --- |
+| Language guessed correctly | English **99.96%** (2,476/2,477), Malay **98.99%** (1,955/1,975) |
+| Malay retrieval, asking an article's own question | recall@1 **0.987** on a 150-article sample |
+| Real questions wrongly blocked | **0** of 4,452, both languages |
+
+When a Malay question finds nothing, the English corpus is tried as a fallback,
+since many answers exist only there. Set `TNGD_LANGUAGES=en` to load English only.
+
+`data/tngd_faq_zh.json` holds the 10 Chinese articles the site has. It is stored
+but **not used**: the tokenizer matches `a-z0-9`, so it reads no Chinese at all.
 
 To re-scrape from the live site:
 
@@ -558,7 +574,7 @@ export TNGD_ANSWERABILITY=off        # force the gate off even with an LLM set
 
 ```bash
 make install-dev
-make test          # 266 tests
+make test          # 303 tests
 make lint          # ruff
 make typecheck     # mypy, clean
 make check         # everything CI runs
@@ -581,12 +597,21 @@ the zero-dependency claim rather than merely asserting it.
   deliberate accuracy/safety trade: it cannot hallucinate, but it also cannot
   combine two FAQs into one answer. Set `LLM_API_KEY` for abstractive answers —
   the grounding gate still applies.
-* **Guardrails are rule-based and English-first.** Bahasa Malaysia coverage is
-  limited to the highest-risk categories. A fine-tuned safety classifier would
-  raise recall on novel paraphrased attacks.
+* **Guardrails are rule-based.** English and Malay patterns cover the highest-risk
+  categories — injection, illicit requests and other people's data — and both were
+  checked against every real FAQ question for false positives. A fine-tuned safety
+  classifier would still raise recall on novel paraphrased attacks.
+* **Blocked requests are refused in English.** The "I could not find this" message
+  follows the question's language, but the refusal text for a blocked request does
+  not, since safety wording should be reviewed by a speaker before shipping.
+* **Chinese is not supported.** The site has 10 Chinese articles, and the tokenizer
+  cannot read Chinese characters. It would need character n-gram tokenising.
+* **Malay quality is measured only by retrieval.** Recall@1 is 0.987 on sampled
+  articles, but there is no Malay golden set for abstention or grounding, so those
+  are assumed to behave as they do in English rather than proven to.
 * **No conversational memory.** Each question is answered independently;
   multi-turn would need query rewriting plus re-screening of the rewritten query.
-* **The golden set is 67 cases** — enough for regression, not for statistically
+* **The golden set is 80 cases** — enough for regression, not for statistically
   strong claims. Reranker weights were tuned on 26 of them; the optimum is a
   broad plateau rather than a knife-edge, but it is still a dev set.
 * **Topically-relevant but unanswerable questions need an LLM to catch.**

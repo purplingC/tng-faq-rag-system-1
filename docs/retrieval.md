@@ -130,6 +130,24 @@ scores 0.52 against *"Who should I contact if I need help with my BizCash
 application from CIMB?"*, inside the range of genuine paraphrases such as
 *"I forgot my PIN"* (0.66). The answerability gate is what refuses it.
 
+## Two languages, two indexes
+
+A Malay question is answered from the Malay corpus, an English one from the English
+corpus. Each language has its own index, because merging the corpora would change the
+IDF statistics that every threshold here was measured against.
+
+`language.py` guesses the language from function words (*apakah, bagaimana, boleh,
+saya*) plus the `-kah` question suffix, never from topic words. On the real corpora it
+reads 2,476/2,477 English titles and 1,955/1,975 Malay titles correctly. A tie goes to
+Malay: measured, that gains 4 Malay titles and costs no English ones.
+
+Asking a Malay article its own question returns that article for 0.987 of a
+150-article sample. Of the 13 apparent misses, 12 were the same question text
+published under more than one article id, so the answer returned was identical.
+
+When a Malay question scores below the abstain threshold, the English corpus is tried
+as a fallback, since many answers exist only in English.
+
 ## Reranker weights
 
 `0.35 / 0.45 / 0.20` was grid-searched over the 26 retrieval cases in the golden

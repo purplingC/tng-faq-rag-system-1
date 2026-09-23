@@ -2,12 +2,13 @@
 
 ## What is measured
 
-`tngd-faq-rag eval` scores a 72-case golden set (`src/tngd_faq_rag/golden_set.py`):
+`tngd-faq-rag eval` scores an 80-case golden set (`src/tngd_faq_rag/golden_set.py`):
 
 | Group | n | Asks |
 | --- | --- | --- |
 | Retrieval | 26 | Does a paraphrase find the right article? (recall@1, recall@k, MRR) |
 | Abstention | 13 | Are out-of-scope questions refused, including named entities that sit next to the corpus (*CIMB*, *Maybank*, *bitcoin*)? |
+| Malay | — | Attacks written in Malay are in the adversarial set, and real Malay questions are in the allow set |
 | Adversarial | 19 | Are attacks blocked, with the right category? |
 | False positives | 14 | Are ordinary support questions left alone? |
 | KB self-censorship | all docs | Does the system ever suppress its own verified answers? |
@@ -36,8 +37,8 @@ Zero-dependency backends, no models downloaded:
 ```
 Retrieval        n=26   recall@1=0.962   recall@4=1.000   MRR=0.981
 Abstention       n=13   correct=13/13    rate=1.000
-Adversarial      n=19   blocked=19/19    rate=1.000   category_acc=1.000
-False positives  n=14   wrongly blocked=0             rate=0.000
+Adversarial      n=23   blocked=23/23    rate=1.000   category_acc=1.000
+False positives  n=18   wrongly blocked=0             rate=0.000
 KB self-censor   n=30   suppressed answers=0
 Latency                 2–5 ms per question, single-threaded, no GPU
 ```
@@ -49,8 +50,8 @@ Run with the answerability gate off, so these are retrieval and rules alone:
 ```
 Retrieval        n=26   recall@1=0.769   recall@4=0.885   MRR=0.814
 Abstention       n=13   correct=9/13     rate=0.692
-Adversarial      n=19   blocked=19/19    rate=1.000   category_acc=1.000
-False positives  n=14   wrongly blocked=0             rate=0.000
+Adversarial      n=23   blocked=23/23    rate=1.000   category_acc=1.000
+False positives  n=18   wrongly blocked=0             rate=0.000
 KB self-censor   n=2477 suppressed answers=0
 ```
 
@@ -68,9 +69,29 @@ The differences from the seed results are worth stating plainly rather than hidi
   gate on, both CIMB questions tested are refused. See
   [retrieval.md](retrieval.md#known-failure-modes).
 
+## Results — Malay
+
+The golden set is English, so Malay is measured separately, against the parallel
+corpus (1,955 of the 1,975 Malay articles are translations of an English one).
+
+| | |
+| --- | --- |
+| Language guessed correctly | English 2,476/2,477 (**99.96%**), Malay 1,955/1,975 (**98.99%**) |
+| Malay retrieval, asking an article its own question | **recall@1 0.987** on a 150-article sample |
+| Questions routed to the Malay corpus | 148/150 |
+| Real FAQ questions wrongly blocked by the input policy | 0/2,477 English, 0/1,975 Malay |
+
+Of the 13 apparent retrieval misses, 12 were the same question text published under
+more than one article id, so the answer returned was identical. The remaining one,
+*"Lupa PIN 6 Digit"*, is a label rather than a question.
+
+Malay attacks sit in the adversarial set and real Malay questions in the allow set, so
+`tngd-faq-rag eval` covers both languages. Abstention and grounding have **no Malay
+golden set**: they are assumed to behave as they do in English, not proven to.
+
 ## Test suite
 
-266 tests in `tests/`, none of which touch the network:
+303 tests in `tests/`, none of which touch the network:
 
 | File | Covers |
 | --- | --- |
@@ -83,7 +104,9 @@ The differences from the seed results are worth stating plainly rather than hidi
 | `test_grounding.py` | Support, numeric consistency, citations |
 | `test_pipeline.py` | Response contract, decisions, attribution, observability |
 | `test_robustness.py` | Hostile input, SQL injection, concurrency |
-| `test_scraper.py` | Payload mapping against recorded fixtures |
+| `test_scraper.py` | Payload mapping against recorded fixtures, language selection |
+| `test_language.py` | The Malay and English language guess |
+| `test_malay.py` | Malay routing, refusal language and Malay guardrails |
 | `test_evaluation.py` | Golden-set thresholds as a regression gate |
 
 Live-network tests are marked and deselected by default: `pytest -m network`.

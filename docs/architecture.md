@@ -9,7 +9,7 @@ change to it invalidates the persisted index via `Config.fingerprint()`.
 ```mermaid
 flowchart LR
   subgraph INGEST["Offline — index build (idempotent, content-hashed)"]
-    S["Scraped FAQ file<br/>or packaged seed KB"] --> N["Normalise, validate,<br/>deduplicate"]
+    S["Scraped FAQ files<br/>English and Malay"] --> N["Normalise, validate,<br/>deduplicate"]
     N --> C["Structure-aware chunker<br/>atomic + contextual headers"]
     C --> E1["Embedder<br/>MiniLM or hashed TF-IDF"]
     C --> B1["BM25 lexical index"]
@@ -55,6 +55,7 @@ flowchart LR
 | `text.py` | Normalisation, tokenisation, sentence splitting, HTML→text |
 | `models.py` | Shared dataclasses (`FaqDoc`, `Chunk`, `Candidate`, `Verdict`, …) |
 | `resources/` | Packaged 30-entry seed knowledge base |
+| `language.py` | Guesses Malay or English, so the question picks its knowledge base |
 | `ingestion.py` | Load, coerce, validate, deduplicate |
 | `chunking.py` | Structure-aware chunking ([docs](chunking.md)) |
 | `embeddings.py` | Hashed TF-IDF and sentence-transformers backends |

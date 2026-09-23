@@ -45,8 +45,8 @@ original README screenshots as its showcase.
 
 | | Original | Now |
 | --- | --- | --- |
-| Injection attacks blocked | 1 / 8 | 19 / 19 |
-| Ordinary support questions wrongly blocked | 5 / 13 | 0 / 14 |
+| Injection attacks blocked | 1 / 8 | 23 / 23 |
+| Ordinary support questions wrongly blocked | 5 / 13 | 0 / 18 |
 
 Blocked by the original: *"Who is eligible for TNG eWallet SOS Balance?"*,
 *"My card number changed…"*, *"how do I kill the app process"*, *"Is it illegal

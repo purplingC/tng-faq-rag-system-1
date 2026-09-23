@@ -127,14 +127,22 @@ A generic "request blocked" is the wrong answer to that message.
 
 | | Result |
 | --- | --- |
-| Adversarial prompts blocked | 19/19 |
-| Correct category assigned | 19/19 |
-| Ordinary support questions wrongly blocked | 0/14 |
+| Adversarial prompts blocked | 23/23, English and Malay |
+| Correct category assigned | 23/23 |
+| Ordinary support questions wrongly blocked | 0/18 |
 | Verified KB answers suppressed | 0/30 seed, 0/2,477 full FAQ |
+| Real FAQ questions wrongly blocked by the input policy | 0/2,477 English, 0/1,975 Malay |
+
+That last row found two real defects. *"What is OTP?"* and *"What is a TNG Reload
+Pin?"* were blocked as credential requests, and questions about a **jailbroken
+device** — a genuine support topic — were blocked as jailbreak attempts. Both now
+have benign-context exemptions, and both are in the golden set.
 
 ## Limitations
 
-Rule-based, English-first (Bahasa Malaysia keywords cover only the
-highest-risk categories). A fine-tuned classifier such as Llama Guard would
-raise recall on novel paraphrased attacks; `InputPolicy` takes a rule list and
-was designed to accept one as an additional layer without restructuring.
+Rule-based, in English and Malay. Malay covers the highest-risk categories only:
+instruction override, prompt extraction, illicit requests and other people's data.
+Refusal copy for a blocked request is English only, since safety wording should be
+reviewed by a speaker first. A fine-tuned classifier such as Llama Guard would raise recall on novel paraphrased
+attacks; `InputPolicy` takes a rule list and was designed to accept one as an
+additional layer without restructuring.
