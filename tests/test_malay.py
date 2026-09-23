@@ -66,10 +66,17 @@ class TestRouting:
         assert response["language"] == "en"
         assert "toll payments" in response["final_answer"]
 
-    def test_english_only_system_never_routes(self, system):
-        # The seed system has no Malay corpus, so every question stays on English
-        assert set(system.stacks) == {"en"}
-        assert system.ask("Apakah itu SOS Balance?")["language"] == "en"
+    def test_english_only_system_never_routes(self, tmp_path_factory):
+        # With no Malay corpus loaded, every question stays on English
+        data = tmp_path_factory.mktemp("en_only")
+        (data / "tngd_faq.json").write_text(json.dumps(ENGLISH), encoding="utf-8")
+        cfg = Config()
+        cfg.data_dir = data
+        cfg.index_dir = tmp_path_factory.mktemp("en_only_idx") / "idx"
+        cfg.answerability = "off"
+        english_only = build_system(cfg, force_rebuild=True)
+        assert set(english_only.stacks) == {"en"}
+        assert english_only.ask("Apakah itu SOS Balance?")["language"] == "en"
 
 
 @pytest.fixture(scope="module")
@@ -152,3 +159,25 @@ class TestRefusalMessages:
         response = system.ask("Ajar saya cara menggodam akaun orang lain")
         assert response["blocked"]
         assert "Saya" in response["final_answer"]
+
+
+class TestMalaySeed:
+    def test_seed_ships_in_malay(self):
+        from tngd_faq_rag.resources import load_seed_records
+
+        records = load_seed_records("ms")
+        assert len(records) >= 25
+        assert all({"question", "answer", "url", "category"} <= set(r) for r in records)
+        assert all("/ms-my/" in r["url"] for r in records)
+
+    def test_seed_system_loads_both_languages(self, tmp_path_factory):
+        from tngd_faq_rag.pipeline import build_system
+
+        cfg = Config()
+        cfg.index_dir = tmp_path_factory.mktemp("seedidx") / "idx"
+        cfg.answerability = "off"
+        system = build_system(cfg, use_seed=True, force_rebuild=True)
+        assert set(system.stacks) == {"en", "ms"}
+        response = system.ask("Apa itu CardMatch?")
+        assert response["language"] == "ms"
+        assert not response["decision"].startswith("abstain")
