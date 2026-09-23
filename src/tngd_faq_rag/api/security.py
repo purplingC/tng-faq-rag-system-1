@@ -1,6 +1,7 @@
 """This file checks API keys and limits how many requests each caller can make."""
 
 from __future__ import annotations
+from typing import Optional
 import secrets
 import threading
 import time
@@ -15,7 +16,8 @@ def _configured_keys(request: Request) -> set[str]:
 
 async def require_api_key(
     request: Request,
-    x_api_key: str | None = Header(default=None, alias="X-API-Key"),
+    # FastAPI evaluates this annotation at runtime, and `str | None` needs Python 3.10
+    x_api_key: Optional[str] = Header(default=None, alias="X-API-Key"),  # noqa: UP045
 ) -> str:
     """Authenticate a caller."""
     keys = _configured_keys(request)
