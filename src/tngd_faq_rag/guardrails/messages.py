@@ -40,5 +40,45 @@ REFUSAL_MESSAGES = {
 }
 
 
-def refusal_message(category: str) -> str:
-    return REFUSAL_MESSAGES.get(category, REFUSAL_MESSAGES[""])
+REFUSAL_MESSAGES_MS = {
+    "prompt_injection": (
+        "Saya hanya boleh menjawab menggunakan FAQ rasmi Touch 'n Go eWallet, dan saya "
+        "tidak boleh mengubah arahan itu atau mendedahkan tetapan saya. Tanya saya tentang "
+        "ciri eWallet dan saya akan membantu."
+    ),
+    "pii_request": (
+        "Saya tidak boleh mengakses atau berkongsi maklumat peribadi, butiran akaun atau "
+        "sejarah transaksi sesiapa. Untuk bantuan berkaitan akaun, sila hubungi sokongan "
+        "TNG Digital melalui aplikasi eWallet."
+    ),
+    "credential_request": (
+        "Saya tidak akan sesekali meminta atau mendedahkan kata laluan, PIN, OTP atau TAC, "
+        "dan kakitangan TNG Digital juga tidak akan berbuat demikian. Jika anda hilang akses "
+        "kepada akaun anda, gunakan pilihan pemulihan dalam aplikasi atau hubungi sokongan rasmi."
+    ),
+    "payment_data": (
+        "Sila jangan kongsikan nombor kad, kod CVV atau butiran pembayaran lain di sini. Saya "
+        "tidak boleh memproses atau menyimpannya. Gunakan aplikasi rasmi TNG eWallet untuk "
+        "sebarang perkara berkaitan kad anda."
+    ),
+    "illicit_activity": (
+        "Saya tidak boleh membantu dengan perkara itu. Saya ialah pembantu FAQ TNG eWallet dan "
+        "saya hanya boleh menjawab soalan tentang penggunaan eWallet secara selamat dan sah."
+    ),
+    "self_harm": (
+        "Saya bersimpati dengan apa yang anda lalui, dan saya bukan bantuan yang sesuai. Sila "
+        "hubungi seseorang yang boleh menyokong anda sekarang - di Malaysia anda boleh "
+        "menghubungi Talian Kasih di 15999, atau Befrienders KL di 03-7627 2929, yang dibuka "
+        "24 jam. Jika anda dalam bahaya segera, sila hubungi 999."
+    ),
+    "": (
+        "Saya tidak boleh membantu dengan permintaan itu. Saya boleh menjawab soalan tentang "
+        "Touch 'n Go eWallet menggunakan FAQ rasmi."
+    ),
+}
+
+
+def refusal_message(category: str, language: str = "en") -> str:
+    """The refusal for a blocked request, in the language the question was asked in."""
+    messages = REFUSAL_MESSAGES_MS if language == "ms" else REFUSAL_MESSAGES
+    return messages.get(category, messages[""])

@@ -245,7 +245,7 @@ class RagSystem:
             LOG.info("BLOCKED [%s] %r (%s)", verdict.category, q[:70], verdict.reason)
             return finish(
                 retrieved_chunks=[],
-                final_answer=refusal_message(verdict.category),
+                final_answer=refusal_message(verdict.category, detect_language(q)),
                 blocked=True,
                 decision="blocked_input",
                 url="",
@@ -378,7 +378,7 @@ class RagSystem:
             LOG.warning("OUTPUT BLOCKED [%s] for %r", out_verdict.category, q[:70])
             return finish(
                 retrieved_chunks=chunk_payload,
-                final_answer=refusal_message(out_verdict.category),
+                final_answer=refusal_message(out_verdict.category, answered_in["language"]),
                 blocked=True,
                 decision="blocked_output",
                 url="",
