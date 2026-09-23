@@ -31,7 +31,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/venv/bin:$PATH" \
     TNGD_INDEX_DIR=/app/.tngd_index \
     TNGD_API_HOST=0.0.0.0 \
-    TNGD_API_PORT=8080
+    TNGD_API_PORT=8080 \
+    TZ=Asia/Kuala_Lumpur
 
 # An unprivileged user, since containers run as root by default
 RUN useradd --create-home --uid 10001 appuser

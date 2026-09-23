@@ -7,7 +7,7 @@ import sys
 LOG = logging.getLogger("tngd_faq_rag")
 
 LOG_FORMAT = "%(asctime)s %(levelname)-7s %(name)s | %(message)s"
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S %z"
 
 
 def setup_logging(verbose: bool = False) -> None:
