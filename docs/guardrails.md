@@ -142,7 +142,8 @@ have benign-context exemptions, and both are in the golden set.
 
 Rule-based, in English and Malay. Malay covers the highest-risk categories only:
 instruction override, prompt extraction, illicit requests and other people's data.
-Refusal copy for a blocked request is English only, since safety wording should be
-reviewed by a speaker first. A fine-tuned classifier such as Llama Guard would raise recall on novel paraphrased
+Refusals follow the language of the question, in English or Malay, with the crisis
+helpline numbers unchanged. The Malay wording has not been reviewed by a native
+speaker and should be before public use. A fine-tuned classifier such as Llama Guard would raise recall on novel paraphrased
 attacks; `InputPolicy` takes a rule list and was designed to accept one as an
 additional layer without restructuring.

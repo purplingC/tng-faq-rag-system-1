@@ -601,9 +601,9 @@ the zero-dependency claim rather than merely asserting it.
   categories — injection, illicit requests and other people's data — and both were
   checked against every real FAQ question for false positives. A fine-tuned safety
   classifier would still raise recall on novel paraphrased attacks.
-* **Blocked requests are refused in English.** The "I could not find this" message
-  follows the question's language, but the refusal text for a blocked request does
-  not, since safety wording should be reviewed by a speaker before shipping.
+* **Malay safety copy has not been reviewed by a native speaker.** Refusals and
+  abstentions follow the question's language, and the crisis helpline numbers are
+  unchanged, but the Malay wording should be checked before this is used publicly.
 * **Chinese is not supported.** The site has 10 Chinese articles, and the tokenizer
   cannot read Chinese characters. It would need character n-gram tokenising.
 * **Malay quality is measured only by retrieval.** Recall@1 is 0.987 on sampled
