@@ -160,6 +160,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
 
     sub.add_parser("index", parents=[common], help="build or rebuild the index")
+    p_stats = sub.add_parser("stats", parents=[common], help="summarise the event log")
+    p_stats.add_argument("--log", metavar="PATH", help="event log to read (default TNGD_EVENT_LOG)")
     sub.add_parser("info", parents=[common], help="print active backends and configuration")
     return parser
 
@@ -192,6 +194,21 @@ def main(argv: Sequence[str] | None = None) -> int:
             _system(args, cfg)
         return 0
 
+    if command == "stats":
+        from .events import log_path, summarise
+
+        event_log = Path(args.log) if args.log else log_path()
+        if event_log is None:
+            print(
+                "No event log configured. Set TNGD_EVENT_LOG or pass --log PATH.", file=sys.stderr
+            )
+            return 2
+        if not event_log.exists():
+            print(f"No event log at {event_log}", file=sys.stderr)
+            return 2
+        print(json.dumps(summarise(event_log), indent=2, ensure_ascii=False))
+        return 0
+
     if command == "eval":
         # Score the frozen seed corpus so the numbers stay reproducible
         # A scraped KB would move whenever the live help centre is edited
@@ -207,12 +224,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             eval_cfg.index_dir = cfg.index_dir.parent / (cfg.index_dir.name + "_eval")
             system = build_system(eval_cfg, use_seed=True, force_rebuild=True)
         results = run_eval(system, verbose=args.verbose)
+        malay = results.get("malay")
         ok = (
             results["retrieval"][f"recall@{system.cfg.final_top_k}"] >= 0.85
             and results["abstention"]["rate"] >= 0.85
             and results["adversarial"]["block_rate"] >= 0.95
             and results["false_positives"]["rate"] <= 0.05
             and results["kb_self_censorship"]["suppressed"] == 0
+            and (malay is None or (malay["recall@1"] >= 0.85 and malay["abstain_rate"] >= 0.85))
         )
         print("RESULT:", "PASS" if ok else "BELOW THRESHOLD")
         return 0 if ok else 1
