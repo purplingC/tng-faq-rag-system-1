@@ -34,7 +34,7 @@ at runtime, and upgrades the system in place.
 | Ordinary support questions wrongly blocked | **0 / 18** golden set, **0 / 4,452** real FAQ questions |
 | Verified answers ever suppressed | **0** |
 | Latency | **2–5 ms** per question, single-threaded, no GPU |
-| Tests | **303** passing, none touching the network |
+| Tests | **322** passing, none touching the network |
 
 ---
 
@@ -152,7 +152,7 @@ make install-dev               # venv + package + pytest/ruff/mypy
 make run                       # demo, then chat
 make api                       # REST API
 make ui                        # web chat
-make test                      # 303 tests
+make test                      # 322 tests
 make check                     # lint + types + tests + eval (what CI runs)
 make help                      # every target
 ```
@@ -267,6 +267,7 @@ tng-faq-rag-system-1/
 │   ├── llm.py                   OpenAI-compatible chat client (stdlib only)
 │   ├── env.py                   .env loader (stdlib only)
 │   ├── language.py              guesses Malay or English from the question
+│   ├── events.py                optional JSONL event log, redacted
 │   ├── guardrails/              input policy, injection, answerability, grounding
 │   ├── generation/              extractive │ local seq2seq │ OpenAI-compatible
 │   ├── pipeline.py              orchestration, persistence, ask_tngd_bot
@@ -274,13 +275,13 @@ tng-faq-rag-system-1/
 │   ├── web/                     stdlib chat UI (human-facing demo)
 │   ├── api/                     FastAPI service (machine-facing, optional)
 │   ├── evaluation.py            metrics harness
-│   ├── golden_set.py            the 80 evaluation cases
-│   └── resources/               packaged 30-entry seed knowledge base
+│   ├── golden_set.py            the 95 evaluation cases
+│   └── resources/               packaged seed knowledge base, 30 English + 29 Malay
 │
 ├── data/tngd_faq.json           full scraped FAQ, 2,477 articles
 ├── data/tngd_faq_ms.json        Malay, 1,975 articles, answered from
 ├── data/tngd_faq_zh.json        Chinese, 10 articles (stored, not used)
-├── tests/                       303 tests, no network access
+├── tests/                       322 tests, no network access
 ├── Dockerfile  .dockerignore  docker-compose.yml
 └── docs/
 │   ├── architecture.md          diagrams, module map, design rules
@@ -392,7 +393,8 @@ articles across 253 categories, scraped from the TNG eWallet help centre on
 `url`, `category`. A fresh clone answers from it with no network and no scrape.
 
 A 30-entry seed corpus (`src/tngd_faq_rag/resources/tngd_faq_seed.json`) ships
-inside the package too. The tests and `tngd-faq-rag eval` always use it, so their
+inside the package too, with 29 of those articles in Malay
+(`tngd_faq_seed_ms.json`) so the evaluation scores both languages offline. The tests and `tngd-faq-rag eval` always use it, so their
 numbers stay reproducible while the live site changes, and it is the fallback
 when `data/tngd_faq.json` is absent.
 
@@ -406,6 +408,7 @@ so they stay separate and the question picks one. Measured:
 
 | | |
 | --- | --- |
+| Malay golden set | recall@1 **1.000**, refusals **6/7** without an LLM key, 7/7 with |
 | Language guessed correctly | English **99.96%** (2,476/2,477), Malay **98.99%** (1,955/1,975) |
 | Malay retrieval, asking an article's own question | recall@1 **0.987** on a 150-article sample |
 | Real questions wrongly blocked | **0** of 4,452, both languages |
@@ -558,6 +561,43 @@ Three properties worth knowing:
 * **It narrows what the generator sees** to the passages the grader endorsed —
   corrective RAG, not just a yes/no gate.
 
+## Optional: the event log
+
+Off by default. Set a path and the system appends one JSON line per question:
+
+```bash
+TNGD_EVENT_LOG=logs/events.jsonl tngd-faq-rag ask "What is CardMatch?"
+```
+
+```json
+{"ts":"2026-09-23T15:24:31+0800","question":"What is CardMatch?","language":"en",
+ "decision":"exact_faq","blocked":false,"confidence":1.0,"latency_ms":47.5,
+ "answer_chars":412,"source_url":"https://support.tngdigital.com.my/...",
+ "llm_called":false,"llm_model":"","llm_ms":null}
+```
+
+Read it back without any other tool:
+
+```bash
+tngd-faq-rag stats --log logs/events.jsonl
+```
+
+That prints counts by decision and language, how many questions cost an LLM call,
+median and worst latency, and **the questions that got no answer** — which is the
+list of gaps in the FAQ.
+
+Two deliberate choices:
+
+* **Card numbers, emails and phone numbers are redacted before the line is written.**
+  Support questions contain them. A card number is only redacted when it passes the
+  Luhn check, so a plain reference number stays readable.
+* **The API key is never written, in any form.** The log records which *model* answered
+  (`llm_model`), because that is what you would actually need to know.
+
+Writing a line can never break a request: any failure is swallowed and logged at debug
+level. Rotation and retention are left to the host, since a container's logs are usually
+collected by the platform.
+
 ## Configuration
 
 Everything is environment-driven with working defaults; see
@@ -574,7 +614,7 @@ export TNGD_ANSWERABILITY=off        # force the gate off even with an LLM set
 
 ```bash
 make install-dev
-make test          # 303 tests
+make test          # 322 tests
 make lint          # ruff
 make typecheck     # mypy, clean
 make check         # everything CI runs
@@ -606,12 +646,12 @@ the zero-dependency claim rather than merely asserting it.
   unchanged, but the Malay wording should be checked before this is used publicly.
 * **Chinese is not supported.** The site has 10 Chinese articles, and the tokenizer
   cannot read Chinese characters. It would need character n-gram tokenising.
-* **Malay quality is measured only by retrieval.** Recall@1 is 0.987 on sampled
-  articles, but there is no Malay golden set for abstention or grounding, so those
-  are assumed to behave as they do in English rather than proven to.
+* **Malay grounding is not separately measured.** Retrieval and abstention now have
+  a Malay golden set (recall@1 1.000, refusals 6/7 without an LLM key), but grounding
+  is assumed to behave as it does in English rather than proven to.
 * **No conversational memory.** Each question is answered independently;
   multi-turn would need query rewriting plus re-screening of the rewritten query.
-* **The golden set is 80 cases** — enough for regression, not for statistically
+* **The golden set is 95 cases** — enough for regression, not for statistically
   strong claims. Reranker weights were tuned on 26 of them; the optimum is a
   broad plateau rather than a knife-edge, but it is still a dev set.
 * **Topically-relevant but unanswerable questions need an LLM to catch.**

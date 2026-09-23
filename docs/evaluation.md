@@ -2,7 +2,7 @@
 
 ## What is measured
 
-`tngd-faq-rag eval` scores an 80-case golden set (`src/tngd_faq_rag/golden_set.py`):
+`tngd-faq-rag eval` scores a 95-case golden set (`src/tngd_faq_rag/golden_set.py`):
 
 | Group | n | Asks |
 | --- | --- | --- |
@@ -71,8 +71,22 @@ The differences from the seed results are worth stating plainly rather than hidi
 
 ## Results — Malay
 
-The golden set is English, so Malay is measured separately, against the parallel
-corpus (1,955 of the 1,975 Malay articles are translations of an English one).
+The seed corpus ships in Malay too (29 of the 30 English seed articles have a
+translation), so `tngd-faq-rag eval` scores Malay with the same reproducibility as
+English:
+
+```
+Malay            n=8    recall@1=1.000  refused=6/7  rate=0.857
+```
+
+The one case that is answered instead of refused is *"Apakah itu bank CIMB?"*, the
+same limitation as English: CIMB appears in the corpus, so word overlap cannot tell a
+definition question from an article that merely mentions the bank. **With the
+answerability gate on it is refused**, in Malay. The evaluation names the failing case
+rather than hiding it, and the pass threshold covers Malay whenever its corpus is loaded.
+
+The wider corpus is measured separately, against the parallel corpus (1,955 of the
+1,975 Malay articles are translations of an English one).
 
 | | |
 | --- | --- |
@@ -91,7 +105,7 @@ golden set**: they are assumed to behave as they do in English, not proven to.
 
 ## Test suite
 
-303 tests in `tests/`, none of which touch the network:
+322 tests in `tests/`, none of which touch the network:
 
 | File | Covers |
 | --- | --- |
@@ -106,7 +120,8 @@ golden set**: they are assumed to behave as they do in English, not proven to.
 | `test_robustness.py` | Hostile input, SQL injection, concurrency |
 | `test_scraper.py` | Payload mapping against recorded fixtures, language selection |
 | `test_language.py` | The Malay and English language guess |
-| `test_malay.py` | Malay routing, refusal language and Malay guardrails |
+| `test_malay.py` | Malay routing, refusal language, Malay guardrails and the Malay seed |
+| `test_events.py` | Event log redaction, writing and the stats summary |
 | `test_evaluation.py` | Golden-set thresholds as a regression gate |
 
 Live-network tests are marked and deselected by default: `pytest -m network`.
