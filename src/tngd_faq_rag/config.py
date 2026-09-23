@@ -68,6 +68,8 @@ class Config:
         default_factory=lambda: Path(os.environ.get("TNGD_INDEX_DIR", ".tngd_index"))
     )
     kb_file: str = field(default_factory=lambda: os.environ.get("TNGD_KB_FILE", "tngd_faq.json"))
+    # Which knowledge bases to load: auto adds Malay when its file is present, en for English only
+    languages: str = field(default_factory=lambda: os.environ.get("TNGD_LANGUAGES", "auto"))
 
     # Chunking
     max_chunk_tokens: int = field(default_factory=lambda: _env_int("TNGD_MAX_CHUNK_TOKENS", 320))
