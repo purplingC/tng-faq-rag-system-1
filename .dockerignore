@@ -4,6 +4,7 @@
 venv/
 .git/
 .github/
+logs/
 .tngd_index/
 .tngd_index_eval/
 .tngd_index_ms/

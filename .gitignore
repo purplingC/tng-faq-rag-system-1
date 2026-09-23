@@ -21,6 +21,7 @@ coverage.xml
 htmlcov/
 
 # Generated index, rebuilt in seconds with make index
+logs/
 .tngd_index/
 .tngd_index_eval/
 .tngd_index_ms/
